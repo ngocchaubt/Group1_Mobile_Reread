@@ -1,0 +1,186 @@
+<div class="container">
+    <app-bookinfo-chart></app-bookinfo-chart>
+</div>
+<div class="top-bar">
+    <div class="search-container">
+        <input id="searchInput" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Search" type="text" class="search">
+        <button (click)="onSearch()">
+            <img src="../../assets/icons/search.svg" class="btn_search">
+        </button>
+    </div>
+</div>
+<div class="order-management">
+    <div style="display: flex;">
+        <button class="create_btn" style="margin-right: auto;" (click)="openCreateBookInfoModal()">Create BookInfo</button>
+    </div>
+    <h2>Book Info</h2>
+    <table>
+        <thead>
+            <tr>
+                <th [class.sorted]="sortBy === 'BookInfoID'" (click)="onSort('BookInfoID')">
+                    BookInfoID 
+                    <span *ngIf="sortBy === 'BookInfoID'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th>BookTitle</th>
+                <th>BookAut</th>
+                <th [class.sorted]="sortBy === 'BookPub'" (click)="onSort('BookPub')">
+                    BookPub 
+                    <span *ngIf="sortBy === 'BookPub'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th>BookDesc</th>
+                <th [class.sorted]="sortBy === 'BookGenre'" (click)="onSort('BookGenre')">
+                    BookGenre 
+                    <span *ngIf="sortBy === 'BookGenre'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>
+                <th [class.sorted]="sortBy === 'BookLang'" (click)="onSort('BookLang')">
+                    BookLang 
+                    <span *ngIf="sortBy === 'BookLang'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>
+                <th [class.sorted]="sortBy === 'BookCateID'" (click)="onSort('BookCateID')">
+                    BookCateID 
+                    <span *ngIf="sortBy === 'BookCateID'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let bookinfo of bookinfo_s">
+                <td>{{bookinfo.BookInfoID}} </td>
+                  <td>
+                    <input *ngIf="isEditing[bookinfo._id!]" [(ngModel)]="bookinfo.BookTitle" type="text" />
+                    <span *ngIf="!isEditing[bookinfo._id!]">{{ bookinfo.BookTitle }}</span>
+                  </td>
+                  <td>
+                    <input *ngIf="isEditing[bookinfo._id!]" [(ngModel)]="bookinfo.BookAut" type="text" />
+                    <span *ngIf="!isEditing[bookinfo._id!]">{{ bookinfo.BookAut }}</span>
+                  </td>
+                  <td>
+                    <input *ngIf="isEditing[bookinfo._id!]" [(ngModel)]="bookinfo.BookPub" type="text" />
+                    <span *ngIf="!isEditing[bookinfo._id!]">{{ bookinfo.BookPub}}</span>
+                  </td>
+                  <td>
+                    <input *ngIf="isEditing[bookinfo._id!]" [(ngModel)]="bookinfo.BookDesc" type="text" />
+                    <span *ngIf="!isEditing[bookinfo._id!]">{{ bookinfo.BookDesc }}</span>
+                  </td>
+                  <td>
+                    <select [disabled]="!isEditing[bookinfo._id!]" [(ngModel)]="bookinfo.BookGenre">
+                        <option *ngFor="let status of BookGenre" [value]="status">
+                            {{ status }}
+                        </option>
+                    </select>   
+                  </td>
+                  <td>
+                    <select [disabled]="!isEditing[bookinfo._id!]" [(ngModel)]="bookinfo.BookLang">
+                        <option *ngFor="let status of BookLang" [value]="status">
+                            {{ status }}
+                        </option>
+                    </select>   
+                  </td>
+                  <td>
+                    <select [disabled]="!isEditing[bookinfo._id!]" [(ngModel)]="bookinfo.BookCateID">
+                        <option *ngFor="let status of BookCateID" [value]="status">
+                            {{ status }}
+                        </option>
+                    </select>   
+                  </td>
+                  <td>
+                    <div class="action-buttons">
+                        <!-- Nếu không ở chế độ chỉnh sửa -->
+                        <button *ngIf="!isEditing[bookinfo._id!]" class="btn btn-primary btn-sm" (click)="startEditing(bookinfo._id!)">
+                            Update
+                        </button>
+                
+                        <!-- Nếu đang chỉnh sửa -->
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button *ngIf="isEditing[bookinfo._id!]" class="btn btn-success btn-sm" (click)="saveBookInfo(bookinfo)">
+                                Save
+                            </button>
+                            <button *ngIf="isEditing[bookinfo._id!]" class="btn btn-secondary btn-sm" (click)="cancelEditing(bookinfo._id!)">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </td>                
+            </tr>
+            <tr *ngIf="!bookinfo_s || bookinfo_s.length === 0">
+                <td colspan="7" class="text-center">Không có bookinfo nào</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Popup tạo bookinfo -->
+    <div class="modal" *ngIf="showCreateMBookInfoModal">
+        <div class="modal-content">
+            <h3>Create BookInfo</h3>
+        
+            <div class="form-group">
+                <label>BookInfoID</label>
+                <input type="number" [(ngModel)]="newBookInfo.BookInfoID" />
+            </div>
+        
+            <div class="form-group">
+                <label> BookTitle</label>
+                <input type="text" [(ngModel)]="newBookInfo. BookTitle" />
+            </div>
+            <div class="form-group">
+                <label>BookAut</label>
+                <input type="text" [(ngModel)]="newBookInfo.BookAut" />
+            </div>
+            <div class="form-group">
+                <label>BookPub</label>
+                <input type="text" [(ngModel)]="newBookInfo.BookPub" />
+            </div>
+            <div class="form-group">
+                <label>BookDesc</label>
+                <input type="text" [(ngModel)]="newBookInfo.BookDesc" />
+            </div>
+            <div class="form-group">
+                <label>BookGenre</label>
+                <select [(ngModel)]="newBookInfo.BookGenre" class="form-select">
+                    <option *ngFor="let status of BookGenre" [value]="status">{{ status }}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>BookLang</label>
+                <select [(ngModel)]="newBookInfo.BookLang" class="form-select">
+                    <option *ngFor="let status of BookLang" [value]="status">{{ status }}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>BookCateID</label>
+                <select [(ngModel)]="newBookInfo.BookCateID" class="form-select">
+                    <option *ngFor="let status of BookCateID" [value]="status">{{ status }}</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-success" (click)="createBookInfo()">Save</button>
+                <button class="btn btn-secondary" (click)="closeCreateBookInfoModal()">Close</button>
+            </div>
+        </div>
+        
+    </div>
+
+
+
+    <div class="pagination-controls">
+        <span>Showing from {{ (currentPage - 1) * pageSize + 1 }} to
+            {{ currentPage * pageSize >  totalBookInfo ?  totalBookInfo : currentPage * pageSize }} of
+            {{ totalBookInfo}} results. 
+        </span>
+        <div class="pagination">
+            <button [disabled]="currentPage === 1" (click)="previousPage()">Trước</button>
+            <span>{{ currentPage }}</span>
+            <button [disabled]="currentPage === totalPages" (click)="nextPage()">Sau</button>
+        </div>
+    </div>
+</div>

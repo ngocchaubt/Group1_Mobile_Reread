@@ -1,0 +1,113 @@
+<div class="container">
+    <app-membership-chart></app-membership-chart>
+</div>
+<div class="top-bar">
+    <div class="search-container">
+        <input id="searchInput" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Search" type="text" class="search">
+        <button (click)="onSearch()">
+            <img src="../../assets/icons/search.svg" class="btn_search">
+        </button>
+    </div>
+</div>
+<div class="order-management">
+    <div style="display: flex;">
+        <button class="create_btn" style="margin-right: auto;" (click)="openCreateMembershipModal()">Create Membership</button>
+    </div>
+    <h2>Membership</h2>
+    <table>
+        <thead>
+            <tr>
+                <th [class.sorted]="sortBy === 'MbsType'" (click)="onSort('MbsType')">
+                    MbsType 
+                    <span *ngIf="sortBy === 'MbsType'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'MinimumPaid'" (click)="onSort('MinimumPaid')">
+                    MinimumPaid 
+                    <span *ngIf="sortBy === 'MinimumPaid'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let membership of memberships">
+                <td>
+                    <input *ngIf="isEditing[membership._id!]" [(ngModel)]="membership.MbsType
+                    " type="text" />
+                    <span *ngIf="!isEditing[membership._id!]">{{ membership.MbsType }}</span>
+                </td>
+                <td>
+                    <input *ngIf="isEditing[membership._id!]" [(ngModel)]="membership.MinimumPaid" type="number" />
+                    <span *ngIf="!isEditing[membership._id!]">{{ membership.MinimumPaid }}</span>
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <!-- Nếu không ở chế độ chỉnh sửa -->
+
+                        <button *ngIf="!isEditing[membership._id!]" class="btn btn-primary btn-sm" style="margin-right: 10px;"
+                            (click)="startEditing(membership._id!)">
+                            Update
+                        </button>
+                        <button *ngIf="!isEditing[membership._id!]" class="btn btn-primary" style="background-color: red; border: 2px solid red; color: white;"
+                            (click)="deleteMembership(membership)">
+                            Delete
+                        </button>
+
+                        <!-- Nếu đang chỉnh sửa -->
+                  
+                            <button *ngIf="isEditing[membership._id!]" class="btn btn-success btn-sm" style="margin-right: 10px;"
+                                (click)="saveMembership(membership)">
+                                Save
+                            </button>
+                            <button *ngIf="isEditing[membership._id!]" class="btn btn-secondary btn-sm"
+                                (click)="cancelEditing(membership._id!)">
+                                Cancel
+                            </button>
+                    </div>
+                </td>
+            </tr>
+            <tr *ngIf="!memberships || memberships.length === 0">
+                <td colspan="7" class="text-center">Không có Membership nào</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Popup tạo Membership -->
+    <div class="modal" *ngIf="showCreateMembershipModal">
+        <div class="modal-content">
+            <h3>Create Membership</h3>
+
+            <div class="form-group">
+                <label>MbsType</label>
+                <input type="text" [(ngModel)]="newMembership.MbsType" />
+            </div>
+
+            <div class="form-group">
+                <label>MinimumPaid</label>
+                <input type="number" [(ngModel)]="newMembership.MinimumPaid" />
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-success" (click)="createMembership()">Save</button>
+                <button class="btn btn-secondary" (click)="closeCreateMembershipModal()">Close</button>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div class="pagination-controls">
+        <span>Showing from {{ (currentPage - 1) * pageSize + 1 }} to
+            {{ currentPage * pageSize > totalMembership ? totalMembership : currentPage * pageSize }} of
+            {{ totalMembership}} results.
+        </span>
+        <div class="pagination">
+            <button [disabled]="currentPage === 1" (click)="previousPage()">Trước</button>
+            <span>{{ currentPage }}</span>
+            <button [disabled]="currentPage === totalPages" (click)="nextPage()">Sau</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,185 @@
+<div class="container">
+    <app-discount-chart></app-discount-chart>
+</div>
+<div class="top-bar">
+    <div class="search-container">
+        <input id="searchInput" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Search" type="text" class="search">
+        <button (click)="onSearch()">
+            <img src="../../assets/icons/search.svg" class="btn_search">
+        </button>
+    </div>
+</div>
+<div class="order-management">
+    <div style="display: flex;">
+        <button class="create_btn" style="margin-right: auto;" (click)="openCreateDiscountModal()">Create Discount</button>
+    </div>
+    <h2>Discount</h2>
+    <table>
+        <thead>
+            <tr>
+                <th [class.sorted]="sortBy === 'DiscountID'" (click)="onSort('DiscountID')">
+                    DiscountID 
+                    <span *ngIf="sortBy === 'DiscountID'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'DiscRate'" (click)="onSort('DiscRate')">
+                    DiscRate 
+                    <span *ngIf="sortBy === 'DiscRate'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'DiscValidFrom'" (click)="onSort('DiscValidFrom')">
+                    DiscValidFrom 
+                    <span *ngIf="sortBy === 'DiscValidFrom'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'DiscValidTo'" (click)="onSort('DiscValidTo')">
+                    DiscValidTo 
+                    <span *ngIf="sortBy === 'DiscValidTo'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'DiscLeft'" (click)="onSort('DiscLeft')">
+                    DiscLeft 
+                    <span *ngIf="sortBy === 'DiscLeft'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'DiscUsed'" (click)="onSort('DiscUsed')">
+                    DiscUsed 
+                    <span *ngIf="sortBy === 'DiscUsed'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'DiscReqd'" (click)="onSort('DiscReq')">
+                    DiscReq 
+                    <span *ngIf="sortBy === 'DiscReq'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let discount of discounts">
+                <td>{{ discount.DiscountID}}</td>
+                <td>
+                    <input *ngIf="isEditing[discount._id!]" [(ngModel)]="discount.DiscRate" type="number" />
+                    <span *ngIf="!isEditing[discount._id!]">{{ discount.DiscRate }}</span>
+                </td>
+                <td>
+                    <input *ngIf="isEditing[discount._id!]" [(ngModel)]="discount.DiscValidFrom"
+                        type="datetime-local" />
+                    <span *ngIf="!isEditing[discount._id!]">{{ discount.DiscValidFrom }}</span>
+                </td>
+                <td>
+                    <input *ngIf="isEditing[discount._id!]" [(ngModel)]="discount.DiscValidTo" type="datetime-local" />
+                    <span *ngIf="!isEditing[discount._id!]">{{ discount.DiscValidTo }}</span>
+                </td>
+                <td>
+                    <input *ngIf="isEditing[discount._id!]" [(ngModel)]="discount.DiscLeft" type="number" />
+                    <span *ngIf="!isEditing[discount._id!]">{{ discount.DiscLeft }}</span>
+                </td>
+                <td>
+                    <input *ngIf="isEditing[discount._id!]" [(ngModel)]="discount.DiscUsed" type="number" />
+                    <span *ngIf="!isEditing[discount._id!]">{{ discount.DiscUsed }}</span>
+                </td>
+                <td>
+                    <input *ngIf="isEditing[discount._id!]" [(ngModel)]="discount.DiscReq" type="number" />
+                    <span *ngIf="!isEditing[discount._id!]">{{ discount.DiscReq }}</span>
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <!-- Nếu không ở chế độ chỉnh sửa -->
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button *ngIf="!isEditing[discount._id!]" class="btn btn-primary"
+                                (click)="startEditing(discount._id!)">
+                                Update
+                            </button>
+                            <button *ngIf="!isEditing[discount._id!]" class="btn btn-primary" style="background-color: red; border: 2px solid red; color: white;"
+                                (click)="deleteDiscount(discount)">
+                                Delete
+                            </button>
+                        </div>
+
+                        <!-- Nếu đang chỉnh sửa -->
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button *ngIf="isEditing[discount._id!]" class="btn btn-success btn-sm"
+                                (click)="saveDiscount(discount)">
+                                Save
+                            </button>
+                            <button *ngIf="isEditing[discount._id!]" class="btn btn-secondary btn-sm"
+                                (click)="cancelEditing(discount._id!)">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr *ngIf="!discounts || discounts.length === 0">
+                <td colspan="7" class="text-center">Không có Discount nào</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Popup tạo Discount -->
+    <div class="modal" *ngIf="showCreateDiscountModal">
+        <div class="modal-content">
+            <h3>Create Discount</h3>
+
+            <div class="form-group">
+                <label>DiscountID</label>
+                <input type="text" [(ngModel)]="newDiscount.DiscountID" />
+            </div>
+
+            <div class="form-group">
+                <label>DiscRate</label>
+                <input type="number" [(ngModel)]="newDiscount.DiscRate" />
+            </div>
+
+            <div class="form-group">
+                <label>DiscValidFrom</label>
+                <input type="datetime-local" [(ngModel)]="newDiscount.DiscValidFrom" />
+            </div>
+
+            <div class="form-group">
+                <label>DiscValidTo</label>
+                <input type="datetime-local" [(ngModel)]="newDiscount.DiscValidTo" />
+            </div>
+
+            <div class="form-group">
+                <label>DiscLeft</label>
+                <input type="number" [(ngModel)]="newDiscount.DiscLeft" />
+            </div>
+
+            <div class="form-group">
+                <label>DiscUsed</label>
+                <input type="number" [(ngModel)]="newDiscount.DiscUsed" />
+            </div>
+
+            <div class="form-group">
+                <label>DiscReq</label>
+                <input type="number" [(ngModel)]="newDiscount.DiscReq" />
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-success" (click)="createDiscount()">Save</button>
+                <button class="btn btn-secondary" (click)="closeCreateDiscountModal()">Close</button>
+            </div>
+        </div>
+
+    </div>
+    <div class="pagination-controls">
+        <span>Showing from {{ (currentPage - 1) * pageSize + 1 }} to
+            {{ currentPage * pageSize > totalDiscount ? totalDiscount : currentPage * pageSize }} of
+            {{ totalDiscount}} results
+        </span>
+        <div class="pagination">
+            <button [disabled]="currentPage === 1" (click)="previousPage()">Trước</button>
+            <span>{{ currentPage }}</span>
+            <button [disabled]="currentPage === totalPages" (click)="nextPage()">Sau</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+<h2 style="text-align: center;">Delivery Dashboard</h2>
+<div style="display: flex; gap: 70px; align-items: center; justify-content: center;">
+
+  <!-- Pie Chart - Order Distribution -->
+  <div style="text-align: center;">
+    <h4>Order Distribution by Carrier</h4>
+    <ngx-charts-pie-chart
+      [view]="view"
+      [results]="deliveryData"
+      [scheme]="colorScheme"
+      [legend]="true"
+      [labels]="true"
+      [doughnut]="false"
+      [gradient]="false"
+      [animations]="true">
+    </ngx-charts-pie-chart>
+  </div>
+
+  <!-- Line Chart - Estimated vs Actual Delivery Time -->
+  <div style="text-align: center;">
+    <h4>Estimated vs Actual Delivery Time</h4>
+    <ngx-charts-line-chart
+      [view]="[600, 300]"
+      [results]="lineChartData"
+      [scheme]="colorScheme"
+      [legend]="true"
+      [xAxis]="true"
+      [yAxis]="true"
+      [yAxisTickFormatting]="formatDateLabel"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      [xAxisLabel]="'Address'"
+      [yAxisLabel]="'Delivery Date'"
+      [autoScale]="true"
+      [animations]="true"
+      [tooltipDisabled]="false">
+    </ngx-charts-line-chart>
+  </div>
+
+</div>

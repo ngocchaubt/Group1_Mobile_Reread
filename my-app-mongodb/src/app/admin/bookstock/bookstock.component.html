@@ -1,0 +1,224 @@
+<div class="container">
+    <app-bookstock-chart></app-bookstock-chart>
+</div>
+<div class="top-bar">
+    <div class="search-container">
+        <input id="searchInput" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Search" type="text" class="search">
+        <button (click)="onSearch()">
+            <img src="../../assets/icons/search.svg" class="btn_search">
+        </button>
+    </div>
+</div>
+<div class="order-management">
+    <div style="display: flex;">
+        <button class="create_btn" style="margin-right: auto;" (click)="openCreateBookStockModal()">Create BookStock</button>
+    </div>
+    <h2>Book Stock</h2>
+    <table>
+        <thead>
+            <tr>
+                <th [class.sorted]="sortBy === 'BookStockID'" (click)="onSort('BookStockID')">
+                    BookStockID 
+                    <span *ngIf="sortBy === 'BookStockID'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>  
+                <th [class.sorted]="sortBy === 'BookISBN_n'" (click)="onSort('BookISBN_n')">
+                    BookISBN_n 
+                    <span *ngIf="sortBy === 'BookISBN_n'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>  
+                <th [class.sorted]="sortBy === 'BookPrice'" (click)="onSort('BookPrice')">
+                    BookPrice 
+                    <span *ngIf="sortBy === 'BookPrice'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>  
+                <th [class.sorted]="sortBy === 'BookSales'" (click)="onSort('BookSales')">
+                    BookSales 
+                    <span *ngIf="sortBy === 'BookSales'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>  
+                <th>BookImg1</th>
+                <th>BookImg2</th>
+                <th [class.sorted]="sortBy === 'BookCond'" (click)="onSort('BookCond')">
+                    BookCond 
+                    <span *ngIf="sortBy === 'BookCond'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'CurrentQty'" (click)="onSort('CurrentQty')">
+                    CurrentQty 
+                    <span *ngIf="sortBy === 'CurrentQty'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'PlacedQty'" (click)="onSort('PlacedQty')">
+                    PlacedQty 
+                    <span *ngIf="sortBy === 'PlacedQty'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'ExpectedQty'" (click)="onSort('ExpectedQty')">
+                    ExpectedQty 
+                    <span *ngIf="sortBy === 'ExpectedQty'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'ReturnedQty'" (click)="onSort('ReturnedQty')">
+                    ReturnedQty 
+                    <span *ngIf="sortBy === 'ReturnedQty'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'BookInfoID'" (click)="onSort('BookInfoID')">
+                    BookInfoID 
+                    <span *ngIf="sortBy === 'BookInfoID'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th>BookTitle</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let bookstock of bookstocks">
+                <td>{{bookstock._id}}</td>
+                <td>{{bookstock.BookISBN_n}}</td>
+                <td>
+                    <input *ngIf="isEditing[bookstock._id!]" [(ngModel)]="bookstock.BookPrice" type="number" />
+                    <span *ngIf="!isEditing[bookstock._id!]">{{ bookstock.BookPrice }}</span>
+                </td>
+                <td>{{bookstock.BookSales}}</td>
+                <td>
+                    <input *ngIf="isEditing[bookstock._id!]" [(ngModel)]="bookstock.BookImg1" type="text" />
+                    <span *ngIf="!isEditing[bookstock._id!]">{{ bookstock.BookImg1 }}</span>
+                </td>
+                <td>
+                    <input *ngIf="isEditing[bookstock._id!]" [(ngModel)]="bookstock.BookImg2" type="text" />
+                    <span *ngIf="!isEditing[bookstock._id!]">{{ bookstock.BookImg2 }}</span>
+                </td>
+                <td>
+                    <select [disabled]="!isEditing[bookstock._id!]" [(ngModel)]="bookstock.BookCond">
+                        <option *ngFor="let status of BookCond" [value]="status">
+                            {{ status }}
+                        </option>
+                    </select> 
+                </td>
+                <td>
+                    <input *ngIf="isEditing[bookstock._id!]" [(ngModel)]="bookstock.CurrentQty" type="number" />
+                    <span *ngIf="!isEditing[bookstock._id!]">{{ bookstock.CurrentQty }}</span>
+                </td>
+                <td>{{bookstock.PlacedQty}}</td>
+                <td>{{bookstock.ExpectedQty}}</td>
+                <td>{{bookstock.ReturnedQty}}</td>
+                <td>{{bookstock.BookInfoID}}</td>
+                <td>{{bookstock.BookTitle}}</td>
+                  <td>
+                    <div class="action-buttons">
+                        <!-- Nếu không ở chế độ chỉnh sửa -->
+                        <button *ngIf="!isEditing[bookstock._id!]" class="btn btn-primary btn-sm" (click)="startEditing(bookstock._id!)">
+                            Update
+                        </button>
+                
+                        <!-- Nếu đang chỉnh sửa -->
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button *ngIf="isEditing[bookstock._id!]" class="btn btn-success btn-sm" (click)="saveBookStock(bookstock)">
+                                Save
+                            </button>
+                            <button *ngIf="isEditing[bookstock._id!]" class="btn btn-secondary btn-sm" (click)="cancelEditing(bookstock._id!)">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </td>                
+            </tr>
+            <tr *ngIf="!bookstocks || bookstocks.length === 0">
+                <td colspan="13" class="text-center">Không có bookstock nào</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Popup tạo bookstock -->
+    <div class="modal" *ngIf="showCreateMBookStockModal">
+        <div class="modal-content">
+            <h3>Create BookStock</h3>
+        
+            <div class="form-group">
+                <label>BookISBN_n</label>
+                <input type="text" [(ngModel)]="newBookStock.BookISBN_n" />
+            </div>
+        
+            <div class="form-group">
+                <label> BookPrice</label>
+                <input type="number" [(ngModel)]="newBookStock.BookPrice" />
+            </div>
+            <div class="form-group">
+                <label>BookSales</label>
+                <input type="number" [(ngModel)]="newBookStock.BookSales" />
+            </div>
+            <div class="form-group">
+                <label>BookImg1</label>
+                <input type="file" (change)="onFileSelected($event, 'BookImg2', newBookStock)" />
+                <img *ngIf="newBookStock.BookImg1" [src]="newBookStock.BookImg1" alt="Preview" width="100">
+            </div>
+            
+            <div class="form-group">
+                <label>BookImg2</label>
+                <input type="file" (change)="onFileSelected($event, 'BookImg2', newBookStock)" />
+                <img *ngIf="newBookStock.BookImg2" [src]="newBookStock.BookImg2" alt="Preview" width="100">
+            </div>            
+            <div class="form-group">
+                <label>BookCond</label>
+                <select [(ngModel)]="newBookStock.BookCond" class="form-select">
+                    <option *ngFor="let status of BookCond" [value]="status">{{ status }}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>CurrentQty</label>
+                <input type="number" [(ngModel)]="newBookStock.CurrentQty" />
+            </div>
+            <div class="form-group">
+                <label>PlacedQty</label>
+                <input type="number" [(ngModel)]="newBookStock.PlacedQty" />
+            </div>
+            <div class="form-group">
+                <label>ExpectedQty</label>
+                <input type="number" [(ngModel)]="newBookStock.ExpectedQty" />
+            </div>
+            <div class="form-group">
+                <label>ReturnedQty</label>
+                <input type="number" [(ngModel)]="newBookStock.ReturnedQty" />
+            </div>
+            <div class="form-group">
+                <label>BookInfoID</label>
+                <input type="number" [(ngModel)]="newBookStock.BookInfoID" />
+            </div>
+            <div class="form-group">
+                <label>BookTitle</label>
+                <input type="text" [(ngModel)]="newBookStock.BookTitle" />
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-success" (click)="createBookStock()">Save</button>
+                <button class="btn btn-secondary" (click)="closeCreateBookStockModal()">Close</button>
+            </div>
+        </div>
+        
+    </div>
+
+
+
+    <div class="pagination-controls">
+        <span>Showing from {{ (currentPage - 1) * pageSize + 1 }} to
+            {{ currentPage * pageSize >  totalBookStock ?  totalBookStock : currentPage * pageSize }} of
+            {{ totalBookStock}} results
+        </span>
+        <div class="pagination">
+            <button [disabled]="currentPage === 1" (click)="previousPage()">Trước</button>
+            <span>{{ currentPage }}</span>
+            <button [disabled]="currentPage === totalPages" (click)="nextPage()">Sau</button>
+        </div>
+    </div>
+</div>

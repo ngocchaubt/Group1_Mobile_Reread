@@ -1,0 +1,56 @@
+
+<div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">
+        <img src="../assets/icons/ReRead Brand Guideline-03 1.svg">
+      </div>
+      <div style="padding: 0px 20px 10px;">
+        <p>{{ EmployeeName }} account</p>
+      </div>
+      <h3>SALES</h3>
+      <ul>
+        <li><a [routerLink]="'/admin/order'">Sales Order</a></li>
+        <li><a [routerLink]="'/admin/delivery'">Delivery</a></li>
+        <li><a [routerLink]="'/admin/discount'">Discount</a></li>
+        <li><a [routerLink]="'/admin/membership'">Membership</a></li>
+      </ul>
+  
+      <h3>PURCHASE</h3>
+      <ul>
+        <li><a [routerLink]="'/admin/quotation'">Purchase Order</a></li>
+      </ul>
+  
+      <h3>INVENTORY</h3>
+      <ul>
+        <li><a [routerLink]="'/admin/bookinfo'">Book Info</a></li>
+        <li><a [routerLink]="'/admin/bookstock'">Book Stock</a></li>
+        <li><a [routerLink]="'/admin/category'">Book Category</a></li>
+      </ul>
+  
+      <h3>EVENT</h3>
+      <ul>
+        <li><a [routerLink]="'/admin/event'">Event Item</a></li>
+        <li><a [routerLink]="'/admin/eventregistration'">Event Registration</a></li>
+      </ul>
+  
+      <h3>REVIEW</h3>
+      <ul>
+        <li><a [routerLink]="'/admin/eventreview'">Event Review</a></li>
+        <li><a [routerLink]="'/admin/bookreview'">Product Review</a></li>
+      </ul>
+      <h3>
+        <button (click)="logout()" class="btn_log">LOGOUT</button>
+      </h3>
+      
+    </div>
+  
+  
+    <!-- Nội dung chính -->
+    <div class="main-content">
+      <!-- Vùng hiển thị nội dung -->
+      <div class="content-area">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>

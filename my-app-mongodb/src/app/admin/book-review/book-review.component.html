@@ -1,0 +1,72 @@
+<div class="top-bar">
+    <div class="search-container">
+        <input id="searchInput" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Search" type="text" class="search">
+        <button (click)="onSearch()">
+            <img src="../../assets/icons/search.svg" class="btn_search">
+        </button>
+    </div>
+</div>
+<div class="order-management">
+    <h2>Product Review</h2>
+    <table>
+        <thead>
+            <tr>
+                <th [class.sorted]="sortBy === 'BookInfoID'" (click)="onSort('BookInfoID')">
+                    BookInfoID 
+                    <span *ngIf="sortBy === 'BookInfoID'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'UserID'" (click)="onSort('UserID')">
+                    UserID 
+                    <span *ngIf="sortBy === 'UserID'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'Rating'" (click)="onSort('Rating')">
+                    Rating 
+                    <span *ngIf="sortBy === 'Rating'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th>Comment</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let bookreview of bookreviews">
+                <tr *ngFor="let review of bookreview.Reviews; let i = index">
+                    <!-- Chỉ hiển thị BookInfoID ở dòng đầu tiên và gộp hàng -->
+                    <td *ngIf="i === 0" [attr.rowspan]="bookreview.Reviews.length">
+                        {{ bookreview.BookInfoID }}
+                    </td>
+                    <td>{{ review.UserID }}</td>
+                    <td>{{ review.Rating }}</td>
+                    <td>{{ review.Comment }}</td>
+                    <td>
+                        <button class="btn btn-primary" style="background-color: red; border: 2px solid red; color: white;"
+                        (click)="deleteBookReview(bookreview)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            </ng-container>
+               
+            <tr *ngIf="!bookreviews || bookreviews.length === 0">
+                <td colspan="12" class="text-center">Không có Book Review nào</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination-controls">
+        <span>Showing from {{ (currentPage - 1) * pageSize + 1 }} to
+            {{ currentPage * pageSize >  totalbookreview ?  totalbookreview : currentPage * pageSize }} of
+            {{  totalbookreview}} results
+        </span>
+        <div class="pagination">
+            <button [disabled]="currentPage === 1" (click)="previousPage()">Trước</button>
+            <span>{{ currentPage }}</span>
+            <button [disabled]="currentPage === totalPages" (click)="nextPage()">Sau</button>
+        </div>
+    </div>
+</div>

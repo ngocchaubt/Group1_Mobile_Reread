@@ -1,0 +1,136 @@
+<div class="container">
+    <app-quotation-chart></app-quotation-chart>
+</div>
+<div class="top-bar">
+    <div class="search-container">
+        <input id="searchInput" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Search" type="text" class="search">
+        <button (click)="onSearch()">
+            <img src="../../assets/icons/search.svg" class="btn_search">
+        </button>
+    </div>
+</div>
+<div class="order-management">
+    <h2>Purchase Order</h2>
+    <table>
+        <thead>
+            <tr>
+                <th [class.sorted]="sortBy === 'QuotID'" (click)="onSort('QuotID')">
+                    QuotID 
+                    <span *ngIf="sortBy === 'QuotID'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>  
+                <th [class.sorted]="sortBy === 'BookQty'" (click)="onSort('BookQty')">
+                    BookQty 
+                    <span *ngIf="sortBy === 'BookQty'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>  
+                <th [class.sorted]="sortBy === 'BookTitle'" (click)="onSort('BookTitle')">
+                    BookTitle 
+                    <span *ngIf="sortBy === 'BookTitle'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>  
+                <th [class.sorted]="sortBy === 'BookAut'" (click)="onSort('BookAut')">
+                    BookAut 
+                    <span *ngIf="sortBy === 'BookAut'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>  
+                <th [class.sorted]="sortBy === 'BookPub'" (click)="onSort('BookPub')">
+                    BookPub 
+                    <span *ngIf="sortBy === 'BookPub'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>  
+                <th [class.sorted]="sortBy === 'BookDesc'" (click)="onSort('BookDesc')">
+                    BookDesc 
+                    <span *ngIf="sortBy === 'BookDesc'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>  
+                <th [class.sorted]="sortBy === 'BookLang'" (click)="onSort('BookLang')">
+                    BookLang 
+                    <span *ngIf="sortBy === 'BookLang'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>  
+                <th [class.sorted]="sortBy === 'BookPrice'" (click)="onSort('BookPrice')">
+                    BookPrice 
+                    <span *ngIf="sortBy === 'BookPrice'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>  
+                <th>BookImg</th>
+                <th [class.sorted]="sortBy === 'QuotStatus'" (click)="onSort('QuotStatus')">
+                    QuotStatus 
+                    <span *ngIf="sortBy === 'QuotStatus'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'QuotDate'" (click)="onSort('QuotDate')">
+                    QuotDate 
+                    <span *ngIf="sortBy === 'QuotDate'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let quotation of quotations">
+                <td>{{ quotation.QuotID}}</td>
+                <td>{{ quotation.BookQty}}</td>
+                <td>{{ quotation.BookTitle}}</td>
+                <td>{{ quotation.BookAut}}</td>
+                <td>{{ quotation.BookPub}}</td>
+                <td >{{ quotation.BookDesc}}</td>
+                <td>{{ quotation.BookLang}}</td>
+                <td>{{ quotation.BookPrice}}</td>
+                <td>{{ quotation.BookImg}}</td>
+                <td>
+                    <select [disabled]="!isEditing[quotation._id!]" [(ngModel)]="quotation.QuotStatus">
+                        <option *ngFor="let status of QuotStatus" [value]="status.value">
+                            {{ status.label }}
+                        </option>
+                    </select>
+                </td>
+                <td>{{ quotation.QuotDate}}</td>
+                  <td>
+                    <div class="action-buttons">
+                        <!-- Nếu không ở chế độ chỉnh sửa -->
+                        <button *ngIf="!isEditing[quotation._id!]" class="btn btn-primary btn-sm" (click)="startEditing(quotation._id!)">
+                            Update
+                        </button>
+                
+                        <!-- Nếu đang chỉnh sửa -->
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button *ngIf="isEditing[quotation._id!]" class="btn btn-success btn-sm" (click)="saveQuotation(quotation)">
+                                Save
+                            </button>
+                            <button *ngIf="isEditing[quotation._id!]" class="btn btn-secondary btn-sm" (click)="cancelEditing(quotation._id!)">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </td>                
+            </tr>
+            <tr *ngIf="!quotations || quotations.length === 0">
+                <td colspan="12" class="text-center">Không có Quotation nào</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination-controls">
+        <span>Showing from {{ (currentPage - 1) * pageSize + 1 }} to
+            {{ currentPage * pageSize >  totalQuotation ?  totalQuotation : currentPage * pageSize }} of
+            {{  totalQuotation}} results
+        </span>
+        <div class="pagination">
+            <button [disabled]="currentPage === 1" (click)="previousPage()">Trước</button>
+            <span>{{ currentPage }}</span>
+            <button [disabled]="currentPage === totalPages" (click)="nextPage()">Sau</button>
+        </div>
+    </div>
+</div>

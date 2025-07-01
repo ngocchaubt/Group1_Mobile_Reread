@@ -1,0 +1,195 @@
+<div class="container">
+    <app-event-chart></app-event-chart>
+</div>
+<div class="top-bar">
+    <div class="search-container">
+        <input id="searchInput" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Search" type="text" class="search">
+        <button (click)="onSearch()">
+            <img src="../../assets/icons/search.svg" class="btn_search">
+        </button>
+    </div>
+</div>
+<div class="order-management">
+    <div style="display: flex;">
+        <button class="create_btn" style="margin-right: auto;" (click)="openCreateEventModal()">Create Event</button>
+    </div>
+    <h2>Event</h2>
+    <table>
+        <thead>
+            <tr>
+                <th [class.sorted]="sortBy === 'EventID'" (click)="onSort('EventID')">
+                    EventID 
+                    <span *ngIf="sortBy === 'EventID'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'EventName'" (click)="onSort('EventName')">
+                    EventName 
+                    <span *ngIf="sortBy === 'EventName'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'EventType'" (click)="onSort('EventType')">
+                    EventType 
+                    <span *ngIf="sortBy === 'EventType'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'EventStart'" (click)="onSort('EventStart')">
+                    EventStart 
+                    <span *ngIf="sortBy === 'EventStart'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'EventEnd'" (click)="onSort('EventEnd')">
+                    EventEnd 
+                    <span *ngIf="sortBy === 'EventEnd'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th>EventDesc</th>
+                <th [class.sorted]="sortBy === 'EventLoc'" (click)="onSort('EventLoc')">
+                    EventLoc 
+                    <span *ngIf="sortBy === 'EventLoc'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'EventCpctc'" (click)="onSort('EventCpctc')">
+                    EventCpctc 
+                    <span *ngIf="sortBy === 'EventCpctc'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th>Img</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let event of events">
+                <td>{{ event.EventID }}</td>
+                  <td>
+                    <input *ngIf="isEditing[event._id!]" [(ngModel)]="event.EventName" type="text" />
+                    <span *ngIf="!isEditing[event._id!]">{{ event.EventName }}</span>
+                  </td>
+                  <td>
+                    <select [disabled]="!isEditing[event._id!]" [(ngModel)]="event.EventType">
+                        <option *ngFor="let status of EventType" [value]="status">
+                            {{ status }}
+                        </option>
+                    </select> 
+                  </td>
+                  <td>
+                    <input *ngIf="isEditing[event._id!]" [(ngModel)]="event.EventStart" type="datetime-local" />
+                    <span *ngIf="!isEditing[event._id!]">{{ event.EventStart }}</span>
+                  </td>
+                  <td>
+                    <input *ngIf="isEditing[event._id!]" [(ngModel)]="event.EventEnd" type="datetime-local" />
+                    <span *ngIf="!isEditing[event._id!]">{{ event.EventEnd }}</span>
+                  </td>
+                  <td>
+                    <textarea *ngIf="isEditing[event._id!]" [(ngModel)]="event.EventDesc"></textarea>
+                    <span *ngIf="!isEditing[event._id!]">{{ event.EventDesc }}</span>
+                  </td>
+                  <td>
+                    <input *ngIf="isEditing[event._id!]" [(ngModel)]="event.EventLoc" type="text" />
+                    <span *ngIf="!isEditing[event._id!]">{{ event.EventLoc }}</span>
+                  </td>
+                  <td>
+                    <input *ngIf="isEditing[event._id!]" [(ngModel)]="event.EventCpct" type="number" />
+                    <span *ngIf="!isEditing[event._id!]">{{ event.EventCpct }}</span>
+                  </td>
+                  <td>
+                    <input *ngIf="isEditing[event._id!]" [(ngModel)]="event.Img" type="text" />
+                    <span *ngIf="!isEditing[event._id!]">{{ event.Img }}</span>
+                  </td>
+                  <td>
+                    <div class="action-buttons">
+                        <!-- Nếu không ở chế độ chỉnh sửa -->
+                        <button *ngIf="!isEditing[event._id!]" class="btn btn-primary btn-sm" (click)="startEditing(event._id!)">
+                            Update
+                        </button>
+                
+                        <!-- Nếu đang chỉnh sửa -->
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button *ngIf="isEditing[event._id!]" class="btn btn-success btn-sm" (click)="saveEvent(event)">
+                                Save
+                            </button>
+                            <button *ngIf="isEditing[event._id!]" class="btn btn-secondary btn-sm" (click)="cancelEditing(event._id!)">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </td>                
+            </tr>
+            <tr *ngIf="!events || events.length === 0">
+                <td colspan="7" class="text-center">Không có event nào</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Popup tạo event -->
+    <div class="modal" *ngIf="showCreateEventModal">
+        <div class="modal-content">
+            <h3>Create Event</h3>
+        
+            <div class="form-group">
+                <label>EventID</label>
+                <input type="text" [(ngModel)]="newEvent.EventID" />
+            </div>
+        
+            <div class="form-group">
+                <label>EventName</label>
+                <input type="text" [(ngModel)]="newEvent.EventName" />
+            </div>
+            <div class="form-group">
+                <label>EventType</label>
+                <select [(ngModel)]="newEvent.EventType" class="form-select">
+                    <option *ngFor="let status of EventType" [value]="status">{{ status }}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>EventStart</label>
+                <input type="datetime-local" [(ngModel)]="newEvent.EventStart" />
+            </div>
+            <div class="form-group">
+                <label>EventEnd</label>
+                <input type="datetime-local" [(ngModel)]="newEvent.EventEnd" />
+            </div>
+            <div class="form-group">
+                <label>EventDesc</label>
+                <textarea [(ngModel)]="newEvent.EventDesc"></textarea>
+            </div>
+            <div class="form-group">
+                <label>EventLoc</label>
+                <input type="text" [(ngModel)]="newEvent.EventLoc" />
+            </div>
+            <div class="form-group">
+                <label>EventCpct</label>
+                <input type="number" [(ngModel)]="newEvent.EventCpct" />
+            </div>
+            <div class="form-group">
+                <label>Img</label>
+                <input type="text" [(ngModel)]="newEvent.Img" />
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-success" (click)="createEvent()">Save</button>
+                <button class="btn btn-secondary" (click)="closeCreateEventModal()">Close</button>
+            </div>
+        </div>
+        
+    </div>
+
+
+
+    <div class="pagination-controls">
+        <span>Showing from {{ (currentPage - 1) * pageSize + 1 }} to
+            {{ currentPage * pageSize >  totalEvent ?  totalEvent : currentPage * pageSize }} of
+            {{ totalEvent}} results.
+        </span>
+        <div class="pagination">
+            <button [disabled]="currentPage === 1" (click)="previousPage()">Trước</button>
+            <span>{{ currentPage }}</span>
+            <button [disabled]="currentPage === totalPages" (click)="nextPage()">Sau</button>
+        </div>
+    </div>
+</div>

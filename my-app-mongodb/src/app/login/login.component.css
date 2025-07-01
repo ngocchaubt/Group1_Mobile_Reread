@@ -1,0 +1,145 @@
+@font-face {
+    font-family: 'Poppins-Bold';
+    src: url("/assets/FZ Poppins-Bold.ttf") format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Poppins-SemiBold';
+    src: url("/assets/FZ Poppins-SemiBold.ttf") format('truetype');
+  }
+  @font-face {
+    font-family: 'Poppins-Regular';
+    src: url("/assets/FZ Poppins-Regular.ttf") format('truetype');
+  }
+
+
+.popup {
+    font-family: 'Poppins-SemiBold';
+    background-color: #F5EDD9;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+    width: 50%;
+    max-width: 400px;
+    position: fixed; /* Đổi từ relative sang fixed */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Căn giữa chính xác */
+}
+
+.error-text {
+    color: red;
+    font-weight: lighter;
+    margin-top: 0px 0px 5px;
+    display: block;
+    padding-top: 0;
+
+}
+.popup.active {
+    transform: scale(1);
+}
+
+.icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.logo img {
+    width: 120px;
+}
+
+.welback {
+    color: #09093760;
+    font-size: 17px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.btitle {
+    color: #391319;
+    font-family: 'Poppins-SemiBold';
+    font-size: 25px;
+    margin-bottom: 20px;
+    text-align: left;
+    margin-top: 0px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.forgot-password {
+    text-align: right;
+    margin-bottom: 15px;
+    color: #391319;
+}
+
+.forgot-password a {
+    font-size: 12px;
+    color: #391319;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+.button-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.loginbtn, .registerbtn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    box-sizing: border-box;
+    font-family: 'Poppins-SemiBold';
+}
+
+.loginbtn {
+    background-color: #097D4C;
+    color: white;
+    border: none;
+}
+
+.registerbtn {
+    background-color: white;
+    border: 1px solid #097D4C;
+    color: #097D4C;
+}
+
+.registerbtn a {
+    text-decoration: none;
+    color: #097D4C;
+    display: block;
+}

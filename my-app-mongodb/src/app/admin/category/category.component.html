@@ -1,0 +1,117 @@
+<div class="top-bar">
+    <div class="search-container">
+        <input id="searchInput" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Search" type="text" class="search">
+        <button (click)="onSearch()">
+            <img src="../../assets/icons/search.svg" class="btn_search">
+        </button>
+    </div>
+</div>
+<div class="order-management">
+    <div style="display: flex;">
+        <button class="create_btn" style="margin-right: auto;" (click)="openCreateCategoryModal()">Create Category</button>
+    </div>
+    <h2>Book Category</h2>
+    <table>
+        <thead>
+            <tr>
+                <th [class.sorted]="sortBy === 'BookCateID'" (click)="onSort('BookCateID')">
+                    BookCateID 
+                    <span *ngIf="sortBy === 'BookCateID'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>  
+                <th [class.sorted]="sortBy === 'BookCateName'" (click)="onSort('BookCateName')">
+                    BookCateName 
+                    <span *ngIf="sortBy === 'BookCateName'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>  
+                <th>BookCateDesc</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let category of categories">
+                <td>  
+                    <input *ngIf="isEditing[category._id!]" [(ngModel)]="category.BookCateID" type="text" style="width: 100%;" />
+                    <span *ngIf="!isEditing[category._id!]">{{ category.BookCateID }}</span>
+                  </td>
+                  <td>
+                    <select [disabled]="!isEditing[category._id!]" [(ngModel)]="category.BookCateName">
+                        <option *ngFor="let status of BookCateName" [value]="status">
+                            {{ status }}
+                        </option>
+                    </select> 
+                  </td>
+                  <td>
+                    <input *ngIf="isEditing[category._id!]" [(ngModel)]="category.BookCateDesc" type="text" style="width: 100%;" />
+                    <span *ngIf="!isEditing[category._id!]">{{ category.BookCateDesc }}</span>
+                  </td>
+                  <td>
+                    <div class="action-buttons">
+                        <!-- Nếu không ở chế độ chỉnh sửa -->
+                        <button style="margin-right: 10px;" *ngIf="!isEditing[category._id!]" class="btn btn-primary btn-sm" (click)="startEditing(category._id!)">
+                            Update
+                        </button>
+                        <button *ngIf="!isEditing[category._id!]" class="btn btn-primary" style="background-color: red; border: 2px solid red; color: white;"
+                        (click)="deleteCategory(category)">
+                            Delete
+                        </button>
+                
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button *ngIf="isEditing[category._id!]" class="btn btn-success btn-sm" (click)="saveCategory(category)">
+                                Save
+                            </button>
+                            <button *ngIf="isEditing[category._id!]" class="btn btn-secondary btn-sm" (click)="cancelEditing(category._id!)">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </td>                
+            </tr>
+            <tr *ngIf="!categories || categories.length === 0">
+                <td colspan="7" class="text-center">Không có category nào</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Popup tạo category -->
+    <div class="modal" *ngIf="showCreateMCategoryModal">
+        <div class="modal-content">
+            <h3>Create Category</h3>
+        
+            <div class="form-group">
+                <label>BookCateID</label>
+                <input type="text" [(ngModel)]="newCategory.BookCateID" />
+            </div>
+        
+            <div class="form-group">
+                <label>BookCateName</label>
+                <input type="text" [(ngModel)]="newCategory.BookCateName" />
+            </div>
+            <div class="form-group">
+                <label>BookCateDesc</label>
+                <input type="text" [(ngModel)]="newCategory.BookCateDesc" />
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-success" (click)="createCategory()">Save</button>
+                <button class="btn btn-secondary" (click)="closeCreateCategoryModal()">Close</button>
+            </div>
+        </div>
+        
+    </div>
+
+
+
+    <div class="pagination-controls">
+        <span>Showing from {{ (currentPage - 1) * pageSize + 1 }} to
+            {{ currentPage * pageSize >  totalCategory ?  totalCategory : currentPage * pageSize }} of
+            {{ totalCategory}} results
+        </span>
+        <div class="pagination">
+            <button [disabled]="currentPage === 1" (click)="previousPage()">Trước</button>
+            <span>{{ currentPage }}</span>
+            <button [disabled]="currentPage === totalPages" (click)="nextPage()">Sau</button>
+        </div>
+    </div>
+</div>

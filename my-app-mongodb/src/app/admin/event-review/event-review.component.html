@@ -1,0 +1,80 @@
+<div class="top-bar">
+    <div class="search-container">
+        <input id="searchInput" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Search" type="text" class="search">
+        <button (click)="onSearch()">
+            <img src="../../assets/icons/search.svg" class="btn_search">
+        </button>
+    </div>
+</div>
+<div class="order-management">
+    <h2>Event Review</h2>
+    <table>
+        <thead>
+            <tr>
+                <th [class.sorted]="sortBy === 'ReviewID'" (click)="onSort('ReviewID')">
+                    ReviewID 
+                    <span *ngIf="sortBy === 'ReviewID'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'EventID'" (click)="onSort('EventID')">
+                    EventID 
+                    <span *ngIf="sortBy === 'EventID'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'UserID'" (click)="onSort('UserID')">
+                    UserID 
+                    <span *ngIf="sortBy === 'UserID'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th [class.sorted]="sortBy === 'Rating'" (click)="onSort('Rating')">
+                    Rating 
+                    <span *ngIf="sortBy === 'Rating'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th>Comment</th>
+                <th [class.sorted]="sortBy === 'ReviewDate'" (click)="onSort('ReviewDate')">
+                    ReviewDate 
+                    <span *ngIf="sortBy === 'ReviewDate'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th> 
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let eventreview of eventreviews">
+                <td>{{ eventreview.ReviewID}}</td>
+                <td>{{ eventreview.EventID}}</td>
+                <td>{{ eventreview.UserID}}</td>
+                <td>{{ eventreview.Rating}}</td>
+                <td>{{ eventreview.Comment}}</td>
+                <td>{{ eventreview.ReviewDate}}</td>
+                <td>
+                    <button  class="btn btn-primary" style="background-color: red; border: 2px solid red; color: white;"
+                    (click)="deleteEventReview(eventreview)">
+                        Delete
+                    </button>
+                </td>             
+            </tr>
+            <tr *ngIf="!eventreviews || eventreviews.length === 0">
+                <td colspan="12" class="text-center">Không có Event Review nào</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination-controls">
+        <span>Showing from{{ (currentPage - 1) * pageSize + 1 }} to
+            {{ currentPage * pageSize >  totaleventreview ?  totaleventreview : currentPage * pageSize }} of
+            {{  totaleventreview}} results.
+        </span>
+        <div class="pagination">
+            <button [disabled]="currentPage === 1" (click)="previousPage()">Trước</button>
+            <span>{{ currentPage }}</span>
+            <button [disabled]="currentPage === totalPages" (click)="nextPage()">Sau</button>
+        </div>
+    </div>
+</div>

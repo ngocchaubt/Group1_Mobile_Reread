@@ -1,0 +1,95 @@
+<div class="container">
+    <app-delivery-chart></app-delivery-chart>
+</div>
+<div class="top-bar">
+    <div class="search-container">
+        <input id="searchInput" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Search" type="text" class="search">
+        <button (click)="onSearch()">
+            <img src="../../assets/icons/search.svg" class="btn_search">
+        </button>
+    </div>
+</div>
+<div class="order-management">
+    <h2>Delivery</h2>
+    <table>
+        <thead>
+            <tr>
+                <th [class.sorted]="sortBy === 'OrderID'" (click)="onSort('OrderID')">
+                    OrderID 
+                    <span *ngIf="sortBy === 'OrderID'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>   
+                <th [class.sorted]="sortBy === 'Address'" (click)="onSort('Address')">
+                    Address 
+                    <span *ngIf="sortBy === 'Address'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>   
+                <th [class.sorted]="sortBy === 'TrackingNumber'" (click)="onSort('TrackingNumber')">
+                    TrackingNumber 
+                    <span *ngIf="sortBy === 'TrackingNumber'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>   
+                <th [class.sorted]="sortBy === 'CarrierName'" (click)="onSort('CarrierName')">
+                    CarrierName 
+                    <span *ngIf="sortBy === 'CarrierName'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>   
+                <th [class.sorted]="sortBy === 'ShipmentStatus'" (click)="onSort('ShipmentStatus')">
+                    ShipmentStatus 
+                    <span *ngIf="sortBy === 'ShipmentStatus'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>   
+                <th [class.sorted]="sortBy === 'ShippedDate'" (click)="onSort('ShippedDate')">
+                    ShippedDate 
+                    <span *ngIf="sortBy === 'ShippedDate'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>   
+                <th [class.sorted]="sortBy === 'EstimatedDeliveryDate'" (click)="onSort('EstimatedDeliveryDate')">
+                    EstimatedDeliveryDate 
+                    <span *ngIf="sortBy === 'EstimatedDeliveryDate'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>   
+                <th [class.sorted]="sortBy === 'ActualDeliveryDate'" (click)="onSort('ActualDeliveryDate')">
+                    ActualDeliveryDate 
+                    <span *ngIf="sortBy === 'ActualDeliveryDate'">
+                        ({{ sortOrder === 'asc' ? '↑' : '↓' }})
+                    </span>
+                </th>   
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let delivery of deliveries">
+                <td>{{ delivery.OrderID}}</td>
+                <td>{{ delivery.Address}}</td>
+                <td>{{ delivery.TrackingNumber}}</td>
+                <td>{{ delivery.CarrierName}}</td>
+                <td>{{ delivery.ShipmentStatus}}</td>
+                <td>{{ delivery.ShippedDate}}</td>
+                <td>{{ delivery.EstimatedDeliveryDate}}</td>
+                <td>{{ delivery.ActualDeliveryDate}}</td>   
+            </tr>
+            <tr *ngIf="!deliveries || deliveries.length === 0">
+                <td colspan="12" class="text-center">Không có Delivery nào</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination-controls">
+        <span>Showing from{{ (currentPage - 1) * pageSize + 1 }} to
+            {{ currentPage * pageSize >  totaldelivery ?  totaldelivery : currentPage * pageSize }} of
+            {{  totaldelivery}} results.
+        </span>
+        <div class="pagination">
+            <button [disabled]="currentPage === 1" (click)="previousPage()">Trước</button>
+            <span>{{ currentPage }}</span>
+            <button [disabled]="currentPage === totalPages" (click)="nextPage()">Sau</button>
+        </div>
+    </div>
+</div>

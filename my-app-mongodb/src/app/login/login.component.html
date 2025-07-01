@@ -1,0 +1,30 @@
+<div class="popup">
+  <div class="logo">
+    <img src="../assets/icons/MainLogo-01 6.svg" alt="Logo">
+  </div>
+  <p class="welback">Welcome back!</p>
+  <p class="btitle">Login to your account!</p>
+  
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <label for="email">E-mail</label>
+    <input id="email" type="email" formControlName="EmployeeEmail" placeholder="john@mail.com">
+    <div *ngIf="loginForm.get('EmployeeEmail')?.invalid && loginForm.get('EmployeeEmail')?.touched">
+      <small class="error-text" style="font-size: 12px;">Email is required and must be valid.</small>
+    </div>
+
+    <label for="password">Password</label>
+    <input id="password" type="password" formControlName="EmployeePassword" placeholder="••••••••">
+    <div *ngIf="loginForm.get('EmployeePassword')?.invalid && loginForm.get('EmployeePassword')?.touched">
+      <small class="error-text" style="font-size: 12px;">Password must be at least 6 characters.</small>
+    </div>
+
+    <div class="button-container">
+      <button type="submit" class="loginbtn" [disabled]="loginForm.invalid">Login</button>
+    </div>
+
+    <!-- Hiển thị lỗi đăng nhập -->
+    <div *ngIf="errorMessage" class="error-text" align="center" style="font-size: 20;">
+      {{ errorMessage }}
+    </div>
+  </form>
+</div>

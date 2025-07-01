@@ -1,0 +1,22 @@
+<h2>Event Dashboard</h2>
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+    <!-- Biểu đồ Pie Chart -->
+    <div style="width: 48%; margin-right: 2%;">
+        <h5 style="text-align: center;">Event Types Distribution</h5>
+        <ngx-charts-pie-chart
+          [view]="[500, 250]"
+          [scheme]="colorScheme"
+          [results]="eventTypeData"
+          [legend]="true"
+          [doughnut]="false"
+          [gradient]="false"
+          [animations]="true"
+          [labels]="true">
+        </ngx-charts-pie-chart>
+    </div>
+
+    <!-- Biểu đồ Line Chart -->
+    <div style="width: 48%;">
+        <canvas id="lineChart"></canvas>
+    </div>
+</div>
